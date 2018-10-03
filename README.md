@@ -16,3 +16,6 @@ William: Used less dense source image, and analyzed a smaller sub section for cl
 Vinay: Took 8 cross 15 pixel wide slices of the image in a 40 degree arc, each 5 degrees apart. Ran an edge detector on each and contoured individually. Vertically stacked slices and ran a sliding window across the resulting imaging, collecting "votes" for whether each slice was able to yield a ring there. Need to figure out how to tune parameters -- it seems like results vary pretty wildly between cross sections, may not be a good correlation with whre the rings actually exist.
 
 William: Found the area of each contour, first using cv.contourArea() but had problems since many contours are sparse in width but have are long, so found rectangular area. Also implemented an overlapping function to prevent contours from stacking on each others' space. Finally, found statistics and buckets on the area of all the final pruned contours.
+
+### Week 4
+William: Ran approxPolyDP on contours found to approximate polygons to close lines, and then merged contours if their endpoints matched up. Tried using convexHull but it didn't work well with contours that had extraneous points outside of the object. Finally, I threw out contours with area under the median area, since about half of the contours were in the 10% bucket in area.
