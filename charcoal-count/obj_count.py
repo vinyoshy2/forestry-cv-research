@@ -10,6 +10,7 @@ cwd = os.getcwd()
 binary_img = cv2.Canny(img, 100, 110)
 cv2.imwrite(cwd+'/canny_edge/IMG_4468_zoom_canny_edge.jpg', binary_img)
 
+px_mm = 1818/float(1400)
 
 #ret,thresh = cv2.threshold(binary_img,127,255,0)
 #_, contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -114,8 +115,8 @@ for i in range(0, len(polyContours)):
     contour1 = polyContours[i]
     for j in range(0, len(polyContours)):
         contour2 = polyContours[j]
-        if i != j and (distance(contour1[0], contour2[0]) < 4 or distance(contour1[len(contour1)-1], contour2[0]) < 4
-         or distance(contour1[0], contour2[len(contour2)-1]) < 4 or distance(contour1[len(contour1)-1], contour2[len(contour2)-1]) < 4):
+        if i != j and (distance(contour1[0], contour2[0]) < 6 or distance(contour1[len(contour1)-1], contour2[0]) < 6
+         or distance(contour1[0], contour2[len(contour2)-1]) < 6 or distance(contour1[len(contour1)-1], contour2[len(contour2)-1]) < 6):
             if j not in alreadyMerged[i]:
                 mergedContours += [np.concatenate((contour1, contour2))]
                 alreadyMerged[i] += [j]
@@ -124,6 +125,7 @@ for i in range(0, len(polyContours)):
         mergedContours += [contour1]
 print "# of mergedContours:", len(mergedContours)
 
+#area = [cv2.contourArea(contour) for contour in mergedContours]
 area = [xy_area(contour) for contour in mergedContours]
 area_np = np.array(area)
 area_np = reject_outliers(area_np)
@@ -147,9 +149,16 @@ print "80% Bucket:",len([a for a in area_np if a >= max(area_np)*0.7  and a < ma
 print "90% Bucket:",len([a for a in area_np if a >= max(area_np)*0.8  and a < max(area_np)*0.9])
 print "100% Bucket:",len([a for a in area_np if a >= max(area_np)*0.9])
 
-mergedContours = [contour for contour in mergedContours if xy_area(contour) > median]
+#mergedContours = [contour for contour in mergedContours if xy_area(contour) > 1*3.14*px_mm and xy_area(contour) < 5*3.14*px_mm]
+#mergedContours = [contour for contour in mergedContours if cv2.contourArea(contour) > 1*px_mm and cv2.contourArea(contour) < 5*px_mm]
+mergedContours = [contour for contour in mergedContours if xy_area(contour) > 1*px_mm and xy_area(contour) < 25*px_mm]
+
 print "Final # of mergedContours:", len(mergedContours)
 
-cv2.drawContours(img, mergedContours, -1, (0,255,0), 1)
+for i in range(0, len(mergedContours)):
+    r = 255 if i % 3 == 0 else 0
+    g = 255 if i % 3 == 1 else 0
+    b = 255 if i % 3 == 2 else 0
+    cv2.drawContours(img, mergedContours, i, (r,g,b), 1)
 
 cv2.imwrite(cwd+'/contour_overlay/IMG_4465_zoom_contour.jpg', img)
