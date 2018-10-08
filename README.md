@@ -19,3 +19,6 @@ William: Found the area of each contour, first using cv.contourArea() but had pr
 
 ### Week 4
 William: Ran approxPolyDP on contours found to approximate polygons to close lines, and then merged contours if their endpoints matched up. Tried using convexHull but it didn't work well with contours that had extraneous points outside of the object. Finally, I threw out contours with area under the median area, since about half of the contours were in the 10% bucket in area.
+
+### Week 5
+William: Implemented millimeter to pixel ratio, with knowledge that petri dish has a 14cm diameter and sieve gets items of 1-5mm size. Furthermore added multicoloring to contour drawing to clarify visual results. Still adjusting parameters in merging contours.
