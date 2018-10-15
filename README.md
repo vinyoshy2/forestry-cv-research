@@ -22,3 +22,6 @@ William: Ran approxPolyDP on contours found to approximate polygons to close lin
 
 ### Week 5
 William: Implemented millimeter to pixel ratio, with knowledge that petri dish has a 14cm diameter and sieve gets items of 1-5mm size. Furthermore added multicoloring to contour drawing to clarify visual results. Still adjusting parameters in merging contours.
+
+### Week 6
+William: Merging contours rewritten - compare pairs of contours, and merge if the convexHull is similar to the ellipse of the pair (More specifically, if the area difference normalized by the area of the ellipse is less than the specified area threshold). Another condition is that the center's of both contours should be near each other, at least the distance specified by a distance threshold or the sum of an individual contour's ellipse axis' lengths. During merging, only allow a contour to be merged once for that function call. Thus, I call the merge function multiple iterations, which should be the maximum amount of fragmented contours for any object in the image.
